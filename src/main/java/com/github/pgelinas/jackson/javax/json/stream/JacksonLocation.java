@@ -1,6 +1,6 @@
 package com.github.pgelinas.jackson.javax.json.stream;
 
-import javax.json.stream.*;
+import jakarta.json.stream.JsonLocation;
 
 public class JacksonLocation implements JsonLocation {
 

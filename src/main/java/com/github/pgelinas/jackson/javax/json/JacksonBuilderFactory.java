@@ -2,7 +2,7 @@ package com.github.pgelinas.jackson.javax.json;
 
 import java.util.*;
 
-import javax.json.*;
+import jakarta.json.*;
 
 import com.fasterxml.jackson.databind.*;
 
@@ -29,6 +29,20 @@ public class JacksonBuilderFactory implements JsonBuilderFactory {
     @Override
     public JsonArrayBuilder createArrayBuilder() {
         return new JacksonArrayBuilder(_mapper.getNodeFactory(), _nodeFactory);
+    }
+
+    @Override
+    public JsonArrayBuilder createArrayBuilder(JsonArray array) {
+        JsonArrayBuilder arrayBuilder = createArrayBuilder();
+        array.forEach(arrayBuilder::add);
+        return arrayBuilder;
+    }
+
+    @Override
+    public JsonObjectBuilder createObjectBuilder(JsonObject object) {
+        JsonObjectBuilder objectBuilder = createObjectBuilder();
+        object.forEach(objectBuilder::add);
+        return objectBuilder;
     }
 
     @Override

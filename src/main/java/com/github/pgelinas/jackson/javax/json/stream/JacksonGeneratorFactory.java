@@ -1,15 +1,18 @@
 package com.github.pgelinas.jackson.javax.json.stream;
 
-import java.io.*;
-import java.nio.charset.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.Charset;
+import java.util.Map;
 
-import javax.json.*;
-import javax.json.stream.*;
-import javax.json.stream.JsonGenerator;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.github.pgelinas.jackson.javax.json.ConfigurationUtils;
+import jakarta.json.JsonException;
+import jakarta.json.stream.JsonGenerator;
 
-import com.fasterxml.jackson.core.*;
-import com.github.pgelinas.jackson.javax.json.*;
+import jakarta.json.stream.JsonGeneratorFactory;
 
 public class JacksonGeneratorFactory implements JsonGeneratorFactory {
     private final JsonFactory _factory;

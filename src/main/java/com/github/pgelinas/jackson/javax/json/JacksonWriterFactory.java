@@ -1,12 +1,16 @@
 package com.github.pgelinas.jackson.javax.json;
 
-import java.io.*;
-import java.nio.charset.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.Charset;
+import java.util.Map;
 
-import javax.json.*;
-
-import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.json.JsonException;
+import jakarta.json.JsonWriter;
+import jakarta.json.JsonWriterFactory;
 
 public class JacksonWriterFactory implements JsonWriterFactory {
     private final ObjectMapper _mapper;

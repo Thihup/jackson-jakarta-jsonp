@@ -1,16 +1,21 @@
 package com.github.pgelinas.jackson.javax.json.stream;
 
-import java.io.*;
-import java.math.*;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Map.Entry;
 
-import javax.json.*;
-import javax.json.JsonValue.ValueType;
-import javax.json.stream.JsonGenerationException;
-import javax.json.stream.JsonGenerator;
-
-import com.fasterxml.jackson.core.*;
-import com.github.pgelinas.jackson.javax.json.*;
+import com.fasterxml.jackson.core.JsonStreamContext;
+import com.github.pgelinas.jackson.javax.json.JacksonValue;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonException;
+import jakarta.json.JsonNumber;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonString;
+import jakarta.json.JsonValue;
+import jakarta.json.JsonValue.ValueType;
+import jakarta.json.stream.JsonGenerationException;
+import jakarta.json.stream.JsonGenerator;
 
 public class JacksonGenerator implements JsonGenerator {
     private final com.fasterxml.jackson.core.JsonGenerator _generator;
@@ -415,6 +420,11 @@ public class JacksonGenerator implements JsonGenerator {
         } catch (IOException e) {
             throw new JsonException("", e);
         }
+    }
+
+    @Override
+    public JsonGenerator writeKey(String name) {
+        throw new UnsupportedOperationException();
     }
 
     public com.fasterxml.jackson.core.JsonGenerator delegate() {

@@ -1,15 +1,45 @@
 package com.github.pgelinas.jackson.javax.json.spi;
 
-import java.io.*;
-import java.util.*;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Map;
 
-import javax.json.*;
-import javax.json.spi.*;
-import javax.json.stream.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.BigIntegerNode;
+import com.fasterxml.jackson.databind.node.DecimalNode;
+import com.fasterxml.jackson.databind.node.DoubleNode;
+import com.fasterxml.jackson.databind.node.IntNode;
+import com.fasterxml.jackson.databind.node.LongNode;
+import com.fasterxml.jackson.databind.node.TextNode;
+import com.github.pgelinas.jackson.javax.json.JacksonBuilderFactory;
+import com.github.pgelinas.jackson.javax.json.JacksonNumber;
+import com.github.pgelinas.jackson.javax.json.JacksonReaderFactory;
+import com.github.pgelinas.jackson.javax.json.JacksonString;
+import com.github.pgelinas.jackson.javax.json.JacksonWriterFactory;
+import com.github.pgelinas.jackson.javax.json.NodeFactory;
+import com.github.pgelinas.jackson.javax.json.stream.JacksonGeneratorFactory;
+import com.github.pgelinas.jackson.javax.json.stream.JacksonParserFactory;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonBuilderFactory;
+import jakarta.json.JsonNumber;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
+import jakarta.json.JsonReader;
+import jakarta.json.JsonReaderFactory;
+import jakarta.json.JsonString;
+import jakarta.json.JsonWriter;
+import jakarta.json.JsonWriterFactory;
+import jakarta.json.spi.JsonProvider;
 
-import com.fasterxml.jackson.databind.*;
-import com.github.pgelinas.jackson.javax.json.*;
-import com.github.pgelinas.jackson.javax.json.stream.*;
+import jakarta.json.stream.JsonGenerator;
+import jakarta.json.stream.JsonGeneratorFactory;
+import jakarta.json.stream.JsonParser;
+import jakarta.json.stream.JsonParserFactory;
 
 public class JacksonProvider extends JsonProvider {
     private final ObjectMapper _mapper = new ObjectMapper();
@@ -105,4 +135,48 @@ public class JacksonProvider extends JsonProvider {
         return new JacksonBuilderFactory(config);
     }
 
+    @Override
+    public JsonObjectBuilder createObjectBuilder(JsonObject object) {
+        return _builderFactory.createObjectBuilder(object);
+    }
+
+    @Override
+    public JsonObjectBuilder createObjectBuilder(Map<String, Object> map) {
+        return _builderFactory.createObjectBuilder(map);
+    }
+
+    @Override
+    public JsonArrayBuilder createArrayBuilder(JsonArray array) {
+        return _builderFactory.createArrayBuilder(array);
+    }
+
+    @Override
+    public JsonString createValue(String value) {
+        return new JacksonString(TextNode.valueOf(value));
+    }
+
+    @Override
+    public JsonNumber createValue(int value) {
+        return new JacksonNumber(IntNode.valueOf(value));
+    }
+
+    @Override
+    public JsonNumber createValue(long value) {
+        return new JacksonNumber(LongNode.valueOf(value));
+    }
+
+    @Override
+    public JsonNumber createValue(double value) {
+        return new JacksonNumber(DoubleNode.valueOf(value));
+    }
+
+    @Override
+    public JsonNumber createValue(BigDecimal value) {
+        return new JacksonNumber(DecimalNode.valueOf(value));
+    }
+
+    @Override
+    public JsonNumber createValue(BigInteger value) {
+        return new JacksonNumber(BigIntegerNode.valueOf(value));
+    }
 }

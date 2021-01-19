@@ -1,18 +1,23 @@
 package com.github.pgelinas.jackson.javax.json.stream;
 
-import static com.fasterxml.jackson.core.JsonToken.*;
+import static com.fasterxml.jackson.core.JsonToken.FIELD_NAME;
+import static com.fasterxml.jackson.core.JsonToken.VALUE_NUMBER_FLOAT;
+import static com.fasterxml.jackson.core.JsonToken.VALUE_NUMBER_INT;
+import static com.fasterxml.jackson.core.JsonToken.VALUE_STRING;
 
-import java.io.*;
-import java.math.*;
-import java.util.*;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.EnumMap;
+import java.util.NoSuchElementException;
 
-import javax.json.*;
-import javax.json.stream.*;
-import javax.json.stream.JsonLocation;
-import javax.json.stream.JsonParser;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonToken;
+import jakarta.json.JsonException;
+import jakarta.json.stream.JsonLocation;
+import jakarta.json.stream.JsonParser;
 
 import com.fasterxml.jackson.core.JsonParser.NumberType;
-import com.fasterxml.jackson.core.*;
+import jakarta.json.stream.JsonParsingException;
 
 public class JacksonParser implements JsonParser {
 

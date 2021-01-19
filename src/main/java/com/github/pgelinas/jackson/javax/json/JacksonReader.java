@@ -1,14 +1,24 @@
 package com.github.pgelinas.jackson.javax.json;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
 
-import javax.json.*;
-import javax.json.stream.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ContainerNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.pgelinas.jackson.javax.json.stream.JacksonLocation;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonException;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonReader;
+import jakarta.json.JsonStructure;
+import jakarta.json.JsonValue;
 
-import com.fasterxml.jackson.core.*;
-import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.node.*;
-import com.github.pgelinas.jackson.javax.json.stream.*;
+import jakarta.json.stream.JsonParsingException;
 
 public class JacksonReader implements JsonReader {
     private final ObjectMapper _mapper;

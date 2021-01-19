@@ -1,12 +1,19 @@
 
 package com.github.pgelinas.jackson.javax.json;
 
-import java.util.*;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
-import javax.json.*;
-
-import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.node.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonNumber;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonString;
+import jakarta.json.JsonValue;
 
 public class JacksonArray extends AbstractList<JsonValue> implements JsonArray, JacksonValue<ArrayNode> {
     private final NodeFactory _nodeFactory;

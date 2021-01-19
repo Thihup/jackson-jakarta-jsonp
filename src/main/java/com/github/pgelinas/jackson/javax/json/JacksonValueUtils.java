@@ -1,10 +1,9 @@
 package com.github.pgelinas.jackson.javax.json;
 
-import java.util.*;
+import java.util.EnumMap;
 
-import javax.json.JsonValue.ValueType;
-
-import com.fasterxml.jackson.core.*;
+import com.fasterxml.jackson.core.JsonToken;
+import jakarta.json.JsonValue.ValueType;
 
 public final class JacksonValueUtils {
     private JacksonValueUtils() {}
@@ -12,7 +11,7 @@ public final class JacksonValueUtils {
     private static EnumMap<JsonToken, ValueType> _tokenToValueType;
 
     static {
-        _tokenToValueType = new EnumMap<JsonToken, ValueType>(JsonToken.class);
+        _tokenToValueType = new EnumMap<>(JsonToken.class);
         _tokenToValueType.put(JsonToken.START_ARRAY, ValueType.ARRAY);
         _tokenToValueType.put(JsonToken.START_OBJECT, ValueType.OBJECT);
         _tokenToValueType.put(JsonToken.VALUE_FALSE, ValueType.FALSE);

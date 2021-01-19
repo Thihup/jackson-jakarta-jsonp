@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 
-import javax.json.JsonArray;
-import javax.json.JsonException;
-import javax.json.JsonObject;
-import javax.json.JsonStructure;
-import javax.json.JsonWriter;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonException;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonStructure;
+import jakarta.json.JsonWriter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pgelinas.jackson.javax.json.stream.JacksonGenerator;

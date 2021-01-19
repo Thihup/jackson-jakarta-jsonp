@@ -1,10 +1,14 @@
 package com.github.pgelinas.jackson.javax.json;
 
-import java.math.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
-import javax.json.*;
-
-import com.fasterxml.jackson.databind.node.*;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
+import jakarta.json.JsonValue;
 
 public class JacksonObjectBuilder implements JsonObjectBuilder {
     private final ObjectNode _delegate;

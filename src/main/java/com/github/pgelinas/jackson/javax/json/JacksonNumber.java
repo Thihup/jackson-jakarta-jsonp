@@ -1,10 +1,10 @@
 package com.github.pgelinas.jackson.javax.json;
 
-import java.math.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
-import javax.json.*;
-
-import com.fasterxml.jackson.databind.node.*;
+import com.fasterxml.jackson.databind.node.NumericNode;
+import jakarta.json.JsonNumber;
 
 public class JacksonNumber extends JacksonValueNode<NumericNode> implements JsonNumber {
     public JacksonNumber(NumericNode node) {

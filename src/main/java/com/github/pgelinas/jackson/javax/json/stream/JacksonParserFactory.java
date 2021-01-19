@@ -1,15 +1,23 @@
 package com.github.pgelinas.jackson.javax.json.stream;
 
-import java.io.*;
-import java.nio.charset.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.Charset;
+import java.util.Map;
 
-import javax.json.*;
-import javax.json.stream.*;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.github.pgelinas.jackson.javax.json.ConfigurationUtils;
+import com.github.pgelinas.jackson.javax.json.JacksonValue;
+import com.github.pgelinas.jackson.javax.json.NodeFactory;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonException;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonValue;
 
-import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.pgelinas.jackson.javax.json.*;
+import jakarta.json.stream.JsonParserFactory;
 
 public class JacksonParserFactory implements JsonParserFactory {
     private final JsonFactory _factory;
@@ -27,7 +35,7 @@ public class JacksonParserFactory implements JsonParserFactory {
     }
 
     @Override
-    public javax.json.stream.JsonParser createParser(Reader reader) {
+    public jakarta.json.stream.JsonParser createParser(Reader reader) {
         try {
             return new JacksonParser(_factory.createParser(reader));
         } catch (IOException e) {
@@ -36,7 +44,7 @@ public class JacksonParserFactory implements JsonParserFactory {
     }
 
     @Override
-    public javax.json.stream.JsonParser createParser(InputStream in) {
+    public jakarta.json.stream.JsonParser createParser(InputStream in) {
         try {
             return new JacksonParser(_factory.createParser(in));
         } catch (IOException e) {
@@ -45,7 +53,7 @@ public class JacksonParserFactory implements JsonParserFactory {
     }
 
     @Override
-    public javax.json.stream.JsonParser createParser(InputStream in, Charset charset) {
+    public jakarta.json.stream.JsonParser createParser(InputStream in, Charset charset) {
         try {
             return new JacksonParser(_factory.createParser(new InputStreamReader(in, charset)));
         } catch (IOException e) {
@@ -54,16 +62,16 @@ public class JacksonParserFactory implements JsonParserFactory {
     }
 
     @Override
-    public javax.json.stream.JsonParser createParser(JsonObject obj) {
+    public jakarta.json.stream.JsonParser createParser(JsonObject obj) {
         return parseTree(obj);
     }
 
     @Override
-    public javax.json.stream.JsonParser createParser(JsonArray array) {
+    public jakarta.json.stream.JsonParser createParser(JsonArray array) {
         return parseTree(array);
     }
 
-    private javax.json.stream.JsonParser parseTree(JsonValue value) {
+    private jakarta.json.stream.JsonParser parseTree(JsonValue value) {
         JsonNode node;
         if (value instanceof JacksonValue) {
             node = ((JacksonValue<?>) value).delegate();

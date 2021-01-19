@@ -1,12 +1,14 @@
 package com.github.pgelinas.jackson.javax.json;
 
-import java.io.*;
-import java.nio.charset.*;
-import java.util.*;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.Charset;
+import java.util.Map;
 
-import javax.json.*;
-
-import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.json.JsonReader;
+import jakarta.json.JsonReaderFactory;
 
 public class JacksonReaderFactory implements JsonReaderFactory {
     private final ObjectMapper _mapper;

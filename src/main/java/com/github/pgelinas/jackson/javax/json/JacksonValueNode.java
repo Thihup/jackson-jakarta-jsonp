@@ -1,6 +1,6 @@
 package com.github.pgelinas.jackson.javax.json;
 
-import com.fasterxml.jackson.databind.node.*;
+import com.fasterxml.jackson.databind.node.ValueNode;
 
 public class JacksonValueNode<T extends ValueNode> implements JacksonValue<T> {
     protected T _delegate;

@@ -1,11 +1,10 @@
 package com.github.pgelinas.jackson.javax.json;
 
-import java.util.*;
+import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.json.*;
-
-import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import jakarta.json.JsonValue;
 
 public final class JacksonEntry implements Entry<String, JsonValue> {
     private final Entry<String, JsonNode> _entry;

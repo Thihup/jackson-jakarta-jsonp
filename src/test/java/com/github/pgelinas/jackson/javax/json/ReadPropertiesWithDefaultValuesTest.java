@@ -2,8 +2,8 @@ package com.github.pgelinas.jackson.javax.json;
 
 import org.junit.Test;
 
-import javax.json.JsonObject;
-import javax.json.spi.JsonProvider;
+import jakarta.json.JsonObject;
+import jakarta.json.spi.JsonProvider;
 import java.io.StringReader;
 
 import static org.hamcrest.CoreMatchers.equalTo;

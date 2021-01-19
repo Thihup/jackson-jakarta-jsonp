@@ -1,8 +1,7 @@
 package com.github.pgelinas.jackson.javax.json;
 
-import javax.json.*;
-
-import com.fasterxml.jackson.databind.node.*;
+import com.fasterxml.jackson.databind.node.TextNode;
+import jakarta.json.JsonString;
 
 public class JacksonString extends JacksonValueNode<TextNode> implements JsonString {
     public JacksonString(TextNode node) {

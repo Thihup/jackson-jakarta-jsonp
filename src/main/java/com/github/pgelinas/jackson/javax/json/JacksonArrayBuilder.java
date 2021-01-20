@@ -2,7 +2,9 @@ package com.github.pgelinas.jackson.javax.json;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Objects;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import jakarta.json.JsonArray;
@@ -27,40 +29,29 @@ public class JacksonArrayBuilder implements JsonArrayBuilder {
 
     @Override
     public JsonArrayBuilder add(JsonValue value) {
-        if (value == null) throw new NullPointerException();
-        if (value == JsonValue.NULL) {
-            _delegate.addNull();
-        } else if (value == JsonValue.FALSE) {
-            _delegate.add(false);
-        } else if (value == JsonValue.TRUE) {
-            _delegate.add(true);
-        } else if (value instanceof JacksonValue) {
-            _delegate.add(((JacksonValue<?>) value).delegate());
-        } else {
-            _delegate.add(_nodeFactory.from(value));
-        }
-
+        Objects.requireNonNull(value);
+        _delegate.add(_nodeFactory.from(_nodeFactory.toJsonValue(value)));
         return this;
     }
 
     @Override
     public JsonArrayBuilder add(String value) {
-        if (value == null) throw new NullPointerException();
+        Objects.requireNonNull(value);
         _delegate.add(value);
         return this;
     }
 
     @Override
     public JsonArrayBuilder add(BigDecimal value) {
-        if (value == null) throw new NullPointerException();
-        _delegate.add(value);
+        Objects.requireNonNull(value);
+        _delegate.add(_nodeFactory.from(_nodeFactory.toJsonValue(value)));
         return this;
     }
 
     @Override
     public JsonArrayBuilder add(BigInteger value) {
-        if (value == null) throw new NullPointerException();
-        _delegate.add(_jsonNodeFactory.numberNode(value));
+        Objects.requireNonNull(value);
+        _delegate.add(_nodeFactory.from(_nodeFactory.toJsonValue(value)));
         return this;
     }
 
@@ -78,6 +69,9 @@ public class JacksonArrayBuilder implements JsonArrayBuilder {
 
     @Override
     public JsonArrayBuilder add(double value) {
+        if (Double.isNaN(value) || Double.isInfinite(value)) {
+            throw new NumberFormatException();
+        }
         _delegate.add(value);
         return this;
     }
@@ -119,5 +113,205 @@ public class JacksonArrayBuilder implements JsonArrayBuilder {
     @Override
     public JsonArray build() {
         return new JacksonArray(_delegate.deepCopy(), _nodeFactory);
+    }
+
+    @Override
+    public JsonArrayBuilder addAll(JsonArrayBuilder builder) {
+        builder.build().forEach(this::add);
+        return this;
+    }
+
+    @Override
+    public JsonArrayBuilder add(int index, JsonValue value) {
+        Objects.requireNonNull(value);
+        outOfBounds(index);
+        _delegate.insert(index, _nodeFactory.from(value));
+        return this;
+    }
+
+    @Override
+    public JsonArrayBuilder add(int index, String value) {
+        Objects.requireNonNull(value);
+        outOfBounds(index);
+        _delegate.insert(index, value);
+        return this;
+    }
+
+    @Override
+    public JsonArrayBuilder add(int index, BigDecimal value) {
+        Objects.requireNonNull(value);
+        outOfBounds(index);
+        _delegate.insert(index, value);
+        return this;
+    }
+
+    @Override
+    public JsonArrayBuilder add(int index, BigInteger value) {
+        Objects.requireNonNull(value);
+        outOfBounds(index);
+        _delegate.insert(index, value);
+        return this;
+    }
+
+    @Override
+    public JsonArrayBuilder add(int index, int value) {
+        outOfBounds(index);
+        _delegate.insert(index, value);
+        return this;
+    }
+
+    @Override
+    public JsonArrayBuilder add(int index, long value) {
+        outOfBounds(index);
+        _delegate.insert(index, value);
+        return this;
+    }
+
+    @Override
+    public JsonArrayBuilder add(int index, double value) {
+        outOfBounds(index);
+        _delegate.insert(index, value);
+        return this;
+    }
+
+    @Override
+    public JsonArrayBuilder add(int index, boolean value) {
+        outOfBounds(index);
+        _delegate.insert(index, value);
+        return this;
+    }
+
+    @Override
+    public JsonArrayBuilder addNull(int index) {
+        outOfBounds(index);
+        _delegate.insert(index, (JsonNode) null);
+        return this;
+    }
+
+    @Override
+    public JsonArrayBuilder add(int index, JsonObjectBuilder builder) {
+        Objects.requireNonNull(builder);
+        outOfBounds(index);
+        if (!(builder instanceof JacksonObjectBuilder)) {
+            _delegate.insert(index, _nodeFactory.from(builder.build()));
+        } else {
+            _delegate.insert(index, ((JacksonObjectBuilder) builder).delegate());
+        }
+        return this;
+    }
+
+    @Override
+    public JsonArrayBuilder add(int index, JsonArrayBuilder builder) {
+        Objects.requireNonNull(builder);
+        outOfBounds(index);
+        if (!(builder instanceof JacksonArrayBuilder)) {
+            _delegate.insert(index, _nodeFactory.from(builder.build()));
+        } else {
+            _delegate.insert(index, ((JacksonArrayBuilder) builder).delegate());
+        }
+        return this;
+    }
+
+    @Override
+    public JsonArrayBuilder set(int index, JsonValue value) {
+        Objects.requireNonNull(value);
+        outOfBounds(index);
+        _delegate.set(index, _nodeFactory.from(value));
+        return this;
+    }
+
+    @Override
+    public JsonArrayBuilder set(int index, String value) {
+        Objects.requireNonNull(value);
+        outOfBounds(index);
+        _delegate.set(index, _nodeFactory.from(_nodeFactory.toJsonValue(value)));
+        return this;
+    }
+
+    @Override
+    public JsonArrayBuilder set(int index, BigDecimal value) {
+        Objects.requireNonNull(value);
+        outOfBounds(index);
+        _delegate.set(index, _nodeFactory.from(_nodeFactory.toJsonValue(value)));
+        return this;
+    }
+
+    @Override
+    public JsonArrayBuilder set(int index, BigInteger value) {
+        Objects.requireNonNull(value);
+        outOfBounds(index);
+        _delegate.set(index, _nodeFactory.from(_nodeFactory.toJsonValue(value)));
+        return this;
+    }
+
+    @Override
+    public JsonArrayBuilder set(int index, int value) {
+        outOfBounds(index);
+        _delegate.set(index, _nodeFactory.from(_nodeFactory.toJsonValue(value)));
+        return this;
+    }
+
+    @Override
+    public JsonArrayBuilder set(int index, long value) {
+        outOfBounds(index);
+        _delegate.set(index, _nodeFactory.from(_nodeFactory.toJsonValue(value)));
+        return this;
+    }
+
+    @Override
+    public JsonArrayBuilder set(int index, double value) {
+        outOfBounds(index);
+        _delegate.set(index, _nodeFactory.from(_nodeFactory.toJsonValue(value)));
+        return this;
+    }
+
+    @Override
+    public JsonArrayBuilder set(int index, boolean value) {
+        outOfBounds(index);
+        _delegate.set(index, _nodeFactory.from(_nodeFactory.toJsonValue(value)));
+        return this;
+    }
+
+    @Override
+    public JsonArrayBuilder setNull(int index) {
+        outOfBounds(index);
+        _delegate.set(index, _nodeFactory.from(JsonValue.NULL));
+        return this;
+    }
+
+    @Override
+    public JsonArrayBuilder set(int index, JsonObjectBuilder builder) {
+        Objects.requireNonNull(builder);
+        outOfBounds(index);
+        if (!(builder instanceof JacksonObjectBuilder)) {
+            _delegate.set(index, _nodeFactory.from(builder.build()));
+        } else {
+            _delegate.set(index, ((JacksonObjectBuilder) builder).delegate());
+        }
+        return this;
+    }
+
+    @Override
+    public JsonArrayBuilder set(int index, JsonArrayBuilder builder) {
+        Objects.requireNonNull(builder);
+        outOfBounds(index);
+        if (!(builder instanceof JacksonArrayBuilder)) {
+            _delegate.set(index, _nodeFactory.from(builder.build()));
+        } else {
+            _delegate.set(index, ((JacksonArrayBuilder) builder).delegate());
+        }
+        return this;
+    }
+
+    @Override
+    public JsonArrayBuilder remove(int index) {
+        outOfBounds(index);
+        _delegate.remove(index);
+        return this;
+    }
+
+    private void outOfBounds(int index){
+        if (index < 0 || index > _delegate.size())
+            throw new IndexOutOfBoundsException();
     }
 }

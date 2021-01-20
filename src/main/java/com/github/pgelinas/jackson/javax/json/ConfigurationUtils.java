@@ -86,7 +86,7 @@ public final class ConfigurationUtils {
 
     public static Map<String, Object> configure(JsonFactory factory, Map<String, ?> config) {
         if (config == null) return Collections.emptyMap();
-        Map<String, Object> inUse = new HashMap<String, Object>();
+        Map<String, Object> inUse = new HashMap<>();
         for (Entry<String, ?> entry : config.entrySet()) {
             String featureName = entry.getKey();
             Object value = entry.getValue();
@@ -101,12 +101,12 @@ public final class ConfigurationUtils {
 
     public static Map<String, Object> configure(ObjectMapper mapper, Map<String, ?> config) {
         if (config == null) return Collections.emptyMap();
-        Map<String, Object> inUse = new HashMap<String, Object>();
+        Map<String, Object> inUse = new HashMap<>();
         for (Entry<String, ?> entry : config.entrySet()) {
             String featureName = entry.getKey();
             Object value = entry.getValue();
             if (!(value instanceof Boolean)) continue;
-            Boolean state = (Boolean) value;
+            boolean state = (Boolean) value;
             if (configure(mapper, featureName, state) || configure(mapper.getFactory(), featureName, state)) {
                 inUse.put(featureName, state);
             }
@@ -114,7 +114,7 @@ public final class ConfigurationUtils {
         return inUse;
     }
 
-    private static boolean configure(ObjectMapper mapper, String featureName, Boolean state) {
+    private static boolean configure(ObjectMapper mapper, String featureName, boolean state) {
         MapperFeature mapperFeature = findMapperFeature(featureName);
         if (mapperFeature != null) {
             mapper.configure(mapperFeature, state);
@@ -130,6 +130,12 @@ public final class ConfigurationUtils {
             mapper.configure(serializationFeature, state);
             return true;
         }
+
+        if (jakarta.json.stream.JsonGenerator.PRETTY_PRINTING.equals(featureName)) {
+            mapper.configure(SerializationFeature.INDENT_OUTPUT, state);
+            return true;
+        }
+
         return false;
     }
 
@@ -149,6 +155,12 @@ public final class ConfigurationUtils {
             factory.configure(generatorFeature, state);
             return true;
         }
+
+        if (jakarta.json.stream.JsonGenerator.PRETTY_PRINTING.equals(featureName)) {
+            // TODO need to implement it
+            return true;
+        }
+
         return false;
     }
 }

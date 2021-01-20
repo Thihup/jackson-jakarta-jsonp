@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonNumber;
 import jakarta.json.JsonObject;
@@ -59,7 +60,7 @@ public class JacksonArray extends AbstractList<JsonValue> implements JsonArray, 
     @Override
     public <T extends JsonValue> List<T> getValuesAs(Class<T> clazz) {
         if (_values == null) {
-            _values = new ArrayList<JsonValue>();
+            _values = new ArrayList<>();
             for (Iterator<JsonNode> iterator = _delegate.elements(); iterator.hasNext();) {
                 _values.add(_nodeFactory.from(iterator.next()));
             }
@@ -70,32 +71,49 @@ public class JacksonArray extends AbstractList<JsonValue> implements JsonArray, 
 
     @Override
     public String getString(int index) {
-        return getRaw(index).asText();
+        return getJsonString(index).getString();
     }
 
     @Override
     public String getString(int index, String defaultValue) {
-        return getRaw(index).asText();
+        try {
+            return getString(index);
+        } catch (Exception ignored) {
+            return defaultValue;
+        }
     }
 
     @Override
     public int getInt(int index) {
-        return getRaw(index).asInt();
+        return getJsonNumber(index).intValue();
     }
 
     @Override
     public int getInt(int index, int defaultValue) {
-        return getRaw(index).asInt(defaultValue);
+        try {
+            return getInt(index);
+        } catch (Exception ignored) {
+            return defaultValue;
+        }
     }
 
     @Override
     public boolean getBoolean(int index) {
-        return getRaw(index).asBoolean();
+        JsonValue value = get(index);
+        if (value == JsonValue.TRUE)
+            return true;
+        if (value == JsonValue.FALSE)
+            return false;
+        throw new ClassCastException();
     }
 
     @Override
     public boolean getBoolean(int index, boolean defaultValue) {
-        return getRaw(index).asBoolean(defaultValue);
+        try {
+            return getBoolean(index);
+        } catch (Exception ignored) {
+            return defaultValue;
+        }
     }
 
     @Override
@@ -115,15 +133,24 @@ public class JacksonArray extends AbstractList<JsonValue> implements JsonArray, 
 
     @Override
     public JsonValue get(int index) {
+        if (index < 0 || index > size())
+            throw new IndexOutOfBoundsException();
         return _nodeFactory.from(getRaw(index));
     }
     
     private JsonNode getRaw(int index){
+        if (index < 0 || index > size())
+            throw new IndexOutOfBoundsException();
         return _delegate.get(index);
     }
     
     @Override
     public String toString() {
         return _delegate.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return JacksonValueUtils.isEquals(this, o);
     }
 }

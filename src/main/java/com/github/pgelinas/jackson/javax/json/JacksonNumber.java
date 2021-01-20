@@ -23,7 +23,8 @@ public class JacksonNumber extends JacksonValueNode<NumericNode> implements Json
 
     @Override
     public int intValueExact() {
-        if(!_delegate.isInt()) throw new ArithmeticException();
+        if (_delegate.isDouble() && _delegate.doubleValue() != _delegate.intValue())
+            throw new ArithmeticException();
         return _delegate.intValue();
     }
 
@@ -58,4 +59,6 @@ public class JacksonNumber extends JacksonValueNode<NumericNode> implements Json
     public BigDecimal bigDecimalValue() {
         return _delegate.decimalValue();
     }
+
+
 }

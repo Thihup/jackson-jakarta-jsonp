@@ -6,6 +6,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -178,5 +179,12 @@ public class JacksonProvider extends JsonProvider {
     @Override
     public JsonNumber createValue(BigInteger value) {
         return new JacksonNumber(BigIntegerNode.valueOf(value));
+    }
+
+    @Override
+    public JsonArrayBuilder createArrayBuilder(Collection<?> collection) {
+        JsonArrayBuilder arrayBuilder = createArrayBuilder();
+        collection.forEach(x -> arrayBuilder.add(_nodeFactory.toJsonValue(x)));
+        return arrayBuilder;
     }
 }

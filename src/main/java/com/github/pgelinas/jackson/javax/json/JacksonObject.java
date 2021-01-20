@@ -32,7 +32,7 @@ public class JacksonObject extends AbstractMap<String, JsonValue> implements Jso
     @Override
     public Set<Map.Entry<String, JsonValue>> entrySet() {
         if (_entries == null) {
-            _entries = new HashSet<Map.Entry<String, JsonValue>>();
+            _entries = new HashSet<>();
             for (Iterator<Entry<String, JsonNode>> iterator = _delegate.fields(); iterator.hasNext();) {
                 _entries.add(new JacksonEntry(iterator.next(), _nodeFactory));
             }

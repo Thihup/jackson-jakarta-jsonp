@@ -9,16 +9,18 @@ import com.fasterxml.jackson.databind.*;
 public class JacksonBuilderFactory implements JsonBuilderFactory {
     private final ObjectMapper _mapper;
     private final NodeFactory _nodeFactory;
+    private final Map<String, Object> _configurationsInUse;
 
     public JacksonBuilderFactory(Map<String, ?> config) {
         _mapper = new ObjectMapper();
         _nodeFactory = new NodeFactory(_mapper.getNodeFactory());
-        ConfigurationUtils.configure(_mapper, config);
+        _configurationsInUse = ConfigurationUtils.configure(_mapper, config);
     }
 
     public JacksonBuilderFactory(ObjectMapper mapper, NodeFactory nodeFactory) {
         _mapper = mapper;
         _nodeFactory = nodeFactory;
+        _configurationsInUse = new HashMap<>();
     }
 
     @Override
@@ -47,6 +49,6 @@ public class JacksonBuilderFactory implements JsonBuilderFactory {
 
     @Override
     public Map<String, ?> getConfigInUse() {
-        return ConfigurationUtils.mapperConfiguration();
+        return _configurationsInUse;
     }
 }

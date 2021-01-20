@@ -13,6 +13,7 @@ import java.util.NoSuchElementException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonToken;
 import jakarta.json.JsonException;
+import jakarta.json.JsonValue;
 import jakarta.json.stream.JsonLocation;
 import jakarta.json.stream.JsonParser;
 
@@ -21,10 +22,10 @@ import jakarta.json.stream.JsonParsingException;
 
 public class JacksonParser implements JsonParser {
 
-    private static EnumMap<JsonToken, Event> _tokenToEvent;
+    private static final EnumMap<JsonToken, Event> _tokenToEvent;
 
     static {
-        _tokenToEvent = new EnumMap<JsonToken, Event>(JsonToken.class);
+        _tokenToEvent = new EnumMap<>(JsonToken.class);
         _tokenToEvent.put(JsonToken.END_ARRAY, Event.END_ARRAY);
         _tokenToEvent.put(JsonToken.END_OBJECT, Event.END_OBJECT);
         _tokenToEvent.put(JsonToken.FIELD_NAME, Event.KEY_NAME);

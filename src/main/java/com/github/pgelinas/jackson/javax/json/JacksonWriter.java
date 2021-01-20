@@ -8,6 +8,7 @@ import jakarta.json.JsonArray;
 import jakarta.json.JsonException;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonStructure;
+import jakarta.json.JsonValue;
 import jakarta.json.JsonWriter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,7 +43,16 @@ public class JacksonWriter implements JsonWriter {
         writeValue(value);
     }
 
+    @Override
+    public void write(JsonValue value) {
+        if (_generator.delegate().isClosed())
+            throw new IllegalStateException();
+        _generator.write(value);
+    }
+
     private void writeValue(JsonStructure structure) {
+        if (_generator.delegate().isClosed())
+            throw new IllegalStateException();
         if (structure instanceof JacksonValue) {
             try {
                 _mapper.writeTree(_generator.delegate(), ((JacksonValue<?>) structure).delegate());

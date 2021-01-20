@@ -24,9 +24,13 @@ public class JacksonGenerator implements JsonGenerator {
         _generator = generator;
     }
 
+    private int startArrayCounter = 0;
+    private int startObjectCounter = 0;
+
     @Override
     public JsonGenerator writeStartObject() {
         try {
+            startObjectCounter++;
             _generator.writeStartObject();
         } catch (com.fasterxml.jackson.core.JsonGenerationException e) {
             throw new JsonGenerationException("", e);
@@ -39,6 +43,7 @@ public class JacksonGenerator implements JsonGenerator {
     @Override
     public JsonGenerator writeStartObject(String name) {
         try {
+            startObjectCounter++;
             _generator.writeFieldName(name);
             _generator.writeStartObject();
         } catch (com.fasterxml.jackson.core.JsonGenerationException e) {
@@ -52,6 +57,8 @@ public class JacksonGenerator implements JsonGenerator {
     @Override
     public JsonGenerator writeStartArray() {
         try {
+            checkValidPosition();
+            startArrayCounter++;
             _generator.writeStartArray();
         } catch (com.fasterxml.jackson.core.JsonGenerationException e) {
             throw new JsonGenerationException("", e);
@@ -64,6 +71,8 @@ public class JacksonGenerator implements JsonGenerator {
     @Override
     public JsonGenerator writeStartArray(String name) {
         try {
+            checkValidPosition();
+            startArrayCounter++;
             _generator.writeFieldName(name);
             _generator.writeStartArray();
         } catch (com.fasterxml.jackson.core.JsonGenerationException e) {
@@ -189,6 +198,7 @@ public class JacksonGenerator implements JsonGenerator {
 
     @Override
     public JsonGenerator write(String name, double value) {
+        checkValidDouble(value);
         try {
             _generator.writeNumberField(name, value);
         } catch (com.fasterxml.jackson.core.JsonGenerationException e) {
@@ -229,8 +239,10 @@ public class JacksonGenerator implements JsonGenerator {
         try {
             if (context.inObject()) {
                 _generator.writeEndObject();
+                startObjectCounter--;
             } else if (context.inArray()) {
                 _generator.writeEndArray();
+                startArrayCounter--;
             } else {
                 throw new JsonGenerationException("No end marker to write for root-level value.");
             }
@@ -320,6 +332,7 @@ public class JacksonGenerator implements JsonGenerator {
 
     @Override
     public JsonGenerator write(BigDecimal value) {
+        checkInObjectOrArray();
         try {
             _generator.writeNumber(value);
         } catch (com.fasterxml.jackson.core.JsonGenerationException e) {
@@ -332,6 +345,7 @@ public class JacksonGenerator implements JsonGenerator {
 
     @Override
     public JsonGenerator write(BigInteger value) {
+        checkInObjectOrArray();
         try {
             _generator.writeNumber(value);
         } catch (com.fasterxml.jackson.core.JsonGenerationException e) {
@@ -344,6 +358,7 @@ public class JacksonGenerator implements JsonGenerator {
 
     @Override
     public JsonGenerator write(int value) {
+        checkInObjectOrArray();
         try {
             _generator.writeNumber(value);
         } catch (com.fasterxml.jackson.core.JsonGenerationException e) {
@@ -356,6 +371,7 @@ public class JacksonGenerator implements JsonGenerator {
 
     @Override
     public JsonGenerator write(long value) {
+        checkInObjectOrArray();
         try {
             _generator.writeNumber(value);
         } catch (com.fasterxml.jackson.core.JsonGenerationException e) {
@@ -368,6 +384,8 @@ public class JacksonGenerator implements JsonGenerator {
 
     @Override
     public JsonGenerator write(double value) {
+        checkValidDouble(value);
+        checkInObjectOrArray();
         try {
             _generator.writeNumber(value);
         } catch (com.fasterxml.jackson.core.JsonGenerationException e) {
@@ -380,6 +398,7 @@ public class JacksonGenerator implements JsonGenerator {
 
     @Override
     public JsonGenerator write(boolean value) {
+        checkInObjectOrArray();
         try {
             _generator.writeBoolean(value);
         } catch (com.fasterxml.jackson.core.JsonGenerationException e) {
@@ -392,6 +411,8 @@ public class JacksonGenerator implements JsonGenerator {
 
     @Override
     public JsonGenerator writeNull() {
+        checkValidPosition();
+        checkInObjectOrArray();
         try {
             _generator.writeNull();
         } catch (com.fasterxml.jackson.core.JsonGenerationException e) {
@@ -404,6 +425,9 @@ public class JacksonGenerator implements JsonGenerator {
 
     @Override
     public void close() {
+        if (startObjectCounter != 0 || startArrayCounter != 0) {
+            throw new JsonGenerationException("Invalid JSON");
+        }
         try {
             _generator.close();
         } catch (com.fasterxml.jackson.core.JsonGenerationException e) {
@@ -424,10 +448,33 @@ public class JacksonGenerator implements JsonGenerator {
 
     @Override
     public JsonGenerator writeKey(String name) {
-        throw new UnsupportedOperationException();
+        try {
+            _generator.writeFieldName(name);
+        } catch (IOException e) {
+            throw new JsonGenerationException("", e);
+        }
+        return this;
     }
 
     public com.fasterxml.jackson.core.JsonGenerator delegate() {
         return _generator;
     }
+
+    private void checkValidDouble(double value) {
+        if (Double.isNaN(value) || Double.isInfinite(value))
+            throw new NumberFormatException();
+    }
+
+    private void checkValidPosition() {
+        JsonStreamContext outputContext = _generator.getOutputContext();
+        if (outputContext.inObject() && !outputContext.hasCurrentName()) {
+            throw new JsonGenerationException("Invalid JSON");
+        }
+    }
+
+    private void checkInObjectOrArray() {
+        if (startArrayCounter == 0 && startObjectCounter == 0)
+            throw new JsonGenerationException("Invalid JSON");
+    }
+
 }

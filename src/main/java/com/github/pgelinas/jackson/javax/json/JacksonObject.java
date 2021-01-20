@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -63,35 +64,52 @@ public class JacksonObject extends AbstractMap<String, JsonValue> implements Jso
 
     @Override
     public String getString(String name) {
-        return _delegate.get(name).asText();
+        return getJsonString(name).getString();
     }
 
     @Override
     public String getString(String name, String defaultValue) {
-        JsonNode jsonNode = _delegate.get(name);
-        return (jsonNode == null) ? defaultValue : jsonNode.asText();
+        try {
+            return getString(name);
+        } catch (Exception ignored) {
+            return defaultValue;
+        }
     }
 
     @Override
     public int getInt(String name) {
-        return _delegate.get(name).asInt();
+        return getJsonNumber(name).intValue();
     }
 
     @Override
     public int getInt(String name, int defaultValue) {
-        JsonNode jsonNode = _delegate.get(name);
-        return (jsonNode == null) ? defaultValue : jsonNode.asInt(defaultValue);
+        try {
+            return getInt(name);
+        } catch (Exception ignored){
+            return defaultValue;
+        }
     }
 
     @Override
     public boolean getBoolean(String name) {
-        return _delegate.get(name).asBoolean();
+        JsonValue jsonValue = get(name);
+        Objects.requireNonNull(jsonValue);
+        if (jsonValue == JsonValue.FALSE) {
+            return false;
+        }
+        if (jsonValue == JsonValue.TRUE) {
+            return true;
+        }
+        throw new ClassCastException();
     }
 
     @Override
     public boolean getBoolean(String name, boolean defaultValue) {
-        JsonNode jsonNode = _delegate.get(name);
-        return (jsonNode == null) ? defaultValue : jsonNode.asBoolean(defaultValue);
+        try {
+            return getBoolean(name);
+        } catch (Exception ignored) {
+            return defaultValue;
+        }
     }
 
     @Override

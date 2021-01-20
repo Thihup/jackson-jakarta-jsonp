@@ -82,6 +82,7 @@ public class JacksonObjectBuilder implements JsonObjectBuilder {
     @Override
     public JsonObjectBuilder add(String name, double value) {
         if (name == null) throw new NullPointerException();
+        checkValidDouble(value);
         _delegate.put(name, value);
         return this;
     }
@@ -125,5 +126,10 @@ public class JacksonObjectBuilder implements JsonObjectBuilder {
     @Override
     public JsonObject build() {
         return new JacksonObject(_delegate.deepCopy(), _nodeFactory);
+    }
+
+    private void checkValidDouble(double value) {
+        if (Double.isNaN(value) || Double.isInfinite(value))
+            throw new NumberFormatException();
     }
 }
